@@ -17,7 +17,7 @@ def root():
 
 
 @app.get("/items/{item_id}")
-async def read_item(item_id: int):
+async def read_item(item_id: int):  # パスパラメータに型を指定できる
     return {"item_id": item_id}
 
 
@@ -31,7 +31,7 @@ async def read_user(user_id: str):
     return {"user_id": user_id}
 
 
-@app.get("/models/{model_name}")
+@app.get("/models/{model_name}")  # numを用いたパスパラメータ
 async def get_model(model_name: ModelName):
     if model_name is ModelName.alexnet:
         return {"model_name": model_name, "message": "Deep Learning FTW!"}
@@ -42,6 +42,6 @@ async def get_model(model_name: ModelName):
     return {"model_name": model_name, "message": "Have some residuals"}
 
 
-@app.get("/files/{file_path:path}")
+@app.get("/files/{file_path:path}")  # ファイルパスを含んだパスパラメータ
 async def read_file(file_path: str):
     return {"file_path": file_path}
