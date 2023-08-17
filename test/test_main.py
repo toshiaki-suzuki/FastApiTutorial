@@ -16,7 +16,7 @@ tasks = [
 ]
 
 
-def test_read_tasks():
+def test_read_tasks_200():
 
     response = client.get("/tasks")
     assert response.status_code == 200
