@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8.0 # MySQLのバージョンを指定します。必要に応じて変更してください。
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword # ルートのパスワードを設定します。セキュリティのために変更してください。
+      MYSQL_DATABASE: fastApiTodo # 初期データベースの名前を設定します。
+      MYSQL_USER: user # ユーザー名を設定します。
+      MYSQL_PASSWORD: password # ユーザーのパスワードを設定します。
+    ports:
+      - "3306:3306" # ホストマシンのポートとコンテナのポートをマッピングします。
+    volumes:
+      - mysql-data:/var/lib/mysql # データの永続性を保つためのボリュームを指定します。
+
+volumes:
+  mysql-data:
