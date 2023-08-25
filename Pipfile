@@ -9,6 +9,7 @@ pytest = "*"
 httpx = "*"
 mysqlclient = "*"
 fastapi = {extras = ["all"], version = "*"}
+python-dotenv = "*"
 
 [dev-packages]
 
