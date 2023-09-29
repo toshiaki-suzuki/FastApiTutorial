@@ -7,24 +7,12 @@ from app.main import app
 from app.models import Base, Task
 from app.database import SessionLocal, DATABASE_URL
 
+from .test_data import tasks
+
 client = TestClient(app)
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# テストデータ
-tasks = [
-    {
-        "id": 1,
-        "name": "test1",
-        "status": "done"
-    },
-    {
-        "id": 2,
-        "name": "test2",
-        "status": "done"
-    },
-]
 
 
 # pytestのフィクスチャを使用して、テスト前にデータベースを初期化しテストデータを追加します
