@@ -3,5 +3,7 @@
 ## 仮想環境起動
 
 ```
-.\venv\Scripts\activate
+pipenv shell
+
+docker compose up -d
 ```
