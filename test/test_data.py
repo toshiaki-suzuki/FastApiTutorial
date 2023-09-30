@@ -2,11 +2,11 @@ tasks = [
     {
         "id": 1,
         "name": "test1",
-        "status": "done"
+        "status": 1
     },
     {
         "id": 2,
         "name": "test2",
-        "status": "done"
+        "status": 0
     },
 ]

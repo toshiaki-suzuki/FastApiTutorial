@@ -20,8 +20,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def test_db():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
-    db.add(Task(id=1, name="test1", status="done"))
-    db.add(Task(id=2, name="test2", status="done"))
+    for task in tasks:
+        db.add(Task(id=task["id"], name=task["name"], status=task["status"]))
     db.commit()
     db.close()
     yield  # ここでテストが実行されます
