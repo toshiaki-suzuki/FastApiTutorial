@@ -1,5 +1,5 @@
 import uuid
-from fastapi import FastAPI, HTTPException, Depends, Path
+from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 from .database import engine, SessionLocal
 from .models import Task
