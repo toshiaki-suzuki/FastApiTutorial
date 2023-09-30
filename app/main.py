@@ -1,9 +1,8 @@
-# main.py
-from fastapi import FastAPI, HTTPException, Depends
+import uuid
+from fastapi import FastAPI, HTTPException, Depends, Path
 from sqlalchemy.orm import Session
 from .database import engine, SessionLocal
 from .models import Task
-
 
 app = FastAPI()
 
@@ -29,12 +28,12 @@ def root():
 @app.get("/tasks")
 def read_tasks(db: Session = Depends(get_db)):
     tasks = db.query(Task).all()
-    return {"tasks": [{"id": task.id, "name": task.name, "status": task.status} for task in tasks]}
+    return {"tasks": [{"id": str(task.id), "name": task.name, "status": task.status} for task in tasks]}
 
 
 @app.get("/tasks/{task_id}")
-def read_task(task_id: int, db: Session = Depends(get_db)):
+def read_task(task_id: uuid.UUID, db: Session = Depends(get_db)):
     task = db.query(Task).filter(Task.id == task_id).first()
     if task:
-        return {"task": {"id": task.id, "name": task.name, "status": task.status}}
+        return {"task": {"id": str(task.id), "name": task.name, "status": task.status}}
     raise HTTPException(status_code=404, detail="Task not found")

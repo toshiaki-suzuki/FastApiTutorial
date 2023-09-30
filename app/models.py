@@ -1,10 +1,15 @@
-from sqlalchemy import Column, Integer, String
-from .database import Base  # 他のファイルからのインポート
+from sqlalchemy import Column, String, Integer
+from sqlalchemy.orm import declarative_base
+from sqlalchemy_utils import UUIDType
+
+import uuid
+
+Base = declarative_base()
 
 
 class Task(Base):
     __tablename__ = "tasks"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
     name = Column(String(50), index=True)
     status = Column(Integer)

@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 sqlalchemy = "*"
+sqlalchemy_utils = "*"
 pytest = "*"
 httpx = "*"
 mysqlclient = "*"

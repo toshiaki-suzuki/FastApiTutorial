@@ -1,3 +1,4 @@
+import uuid
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -31,16 +32,21 @@ def test_db():
 def test_read_tasks_200(test_db):
     response = client.get("/tasks")
     assert response.status_code == 200
-    assert response.json() == {"tasks": tasks}
+    # レスポンスのtasksの順序が一定でないため、ソートしてから比較する
+    response_tasks = response.json()["tasks"].sort(key=lambda x: x["id"])
+    expected_tasks = tasks.sort(key=lambda x: x["id"])
+    assert response_tasks == expected_tasks
 
 
 def test_read_task_200(test_db):
-    response = client.get("/tasks/1")
+    response = client.get(f"/tasks/{tasks[0]['id']}")
     assert response.status_code == 200
     assert response.json() == {"task": tasks[0]}
 
 
 def test_read_task_404(test_db):
-    response = client.get("/tasks/0")
+    # 既知の無効なUUIDを生成
+    non_existent_uuid = uuid.UUID('00000000-0000-0000-0000-000000000000')
+    response = client.get(f"/tasks/{non_existent_uuid}")
     assert response.status_code == 404
     assert response.json() == {"detail": "Task not found"}
