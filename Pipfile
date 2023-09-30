@@ -11,6 +11,7 @@ httpx = "*"
 mysqlclient = "*"
 fastapi = {extras = ["all"], version = "*"}
 python-dotenv = "*"
+deepdiff = "*"
 
 [dev-packages]
 

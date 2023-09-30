@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "bc9f269dbf4155d4f91d8a35dbe63445ecc7bfe03fbd220dba1b1f9e9180e1f4"
+            "sha256": "1ff7e3ed77a0fcd96d3aa55ce0fc1c80ef3ec5efdfaf11f82b454d66f3b9dd39"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -48,6 +48,15 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==8.1.7"
+        },
+        "deepdiff": {
+            "hashes": [
+                "sha256:080b1359d6128f3f5f1738c6be3064f0ad9b0cc41994aa90a028065f6ad11f25",
+                "sha256:acdc1651a3e802415e0337b7e1192df5cd7c17b72fbab480466fdd799b9a72e7"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==6.5.0"
         },
         "dnspython": {
             "hashes": [
@@ -319,6 +328,14 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==2.2.0"
+        },
+        "ordered-set": {
+            "hashes": [
+                "sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562",
+                "sha256:694a8e44c87657c59292ede72891eb91d34131f6531463aab3009191c77364a8"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==4.1.0"
         },
         "orjson": {
             "hashes": [

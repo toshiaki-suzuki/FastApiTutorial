@@ -1,5 +1,6 @@
 import uuid
 import pytest
+from deepdiff import DeepDiff
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -32,10 +33,8 @@ def test_db():
 def test_read_tasks_200(test_db):
     response = client.get("/tasks")
     assert response.status_code == 200
-    # レスポンスのtasksの順序が一定でないため、ソートしてから比較する
-    response_tasks = response.json()["tasks"].sort(key=lambda x: x["id"])
-    expected_tasks = tasks.sort(key=lambda x: x["id"])
-    assert response_tasks == expected_tasks
+    # 順序を無視して比較するために、DeepDiffを使用しています
+    assert DeepDiff(response.json(), {"tasks": tasks})
 
 
 def test_read_task_200(test_db):
