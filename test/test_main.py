@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.main import app
 from app.models import Base, Task
-from app.database import SessionLocal, DATABASE_URL
+from app.database import DATABASE_URL
 
 from .test_data import tasks
 
@@ -18,6 +18,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 # pytestのフィクスチャを使用して、テスト前にデータベースを初期化しテストデータを追加します
+
+
 @pytest.fixture(scope="module")
 def test_db():
     Base.metadata.create_all(bind=engine)

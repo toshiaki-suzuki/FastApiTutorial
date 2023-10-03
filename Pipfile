@@ -12,6 +12,8 @@ mysqlclient = "*"
 fastapi = {extras = ["all"], version = "*"}
 python-dotenv = "*"
 deepdiff = "*"
+flake8 = "*"
+autopep8 = "*"
 
 [dev-packages]
 
