@@ -1,8 +1,8 @@
 import uuid
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-from .database import engine, SessionLocal
-from .models import Task, Base
+from database import engine, SessionLocal
+from models import Base, Task, TaskCreate
 
 app = FastAPI()
 
@@ -49,3 +49,26 @@ def read_task(task_id: uuid.UUID, db: Session = Depends(get_db)):
             }
         }
     raise HTTPException(status_code=404, detail="Task not found")
+
+
+@app.post("/tasks")
+def create_task(task: TaskCreate, db: Session = Depends(get_db)):
+    db_task = Task(name=task.name, status=task.status)
+    try:
+        db.add(db_task)
+        db.commit()
+        task_id = str(db_task.id)  # Save the id before closing the session
+        task_name = db_task.name
+        task_status = db_task.status
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        db.close()
+    return {
+        "task": {
+            "id": task_id,
+            "name": task_name,
+            "status": task_status
+        }
+    }
