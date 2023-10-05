@@ -1,8 +1,8 @@
 import uuid
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-from database import engine, SessionLocal
-from models import Base, Task, TaskCreate
+from app.database import engine, SessionLocal
+from app.models import Base, Task, TaskCreate
 
 app = FastAPI()
 
