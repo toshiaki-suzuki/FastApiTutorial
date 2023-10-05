@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+sqlalchemy = "*"
+sqlalchemy_utils = "*"
+pytest = "*"
+httpx = "*"
+mysqlclient = "*"
+fastapi = {extras = ["all"], version = "*"}
+python-dotenv = "*"
+deepdiff = "*"
+flake8 = "*"
+autopep8 = "*"
+pydantic = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
+python_full_version = "3.11.4"
