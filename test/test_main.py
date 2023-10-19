@@ -1,3 +1,4 @@
+import re
 import uuid
 import pytest
 from deepdiff import DeepDiff
@@ -51,3 +52,24 @@ def test_read_task_404(test_db):
     response = client.get(f"/tasks/{non_existent_uuid}")
     assert response.status_code == 404
     assert response.json() == {"detail": "Task not found"}
+
+
+def test_create_task(test_db):
+    data = {
+        "name": "Test Task",
+        "status": 1
+    }
+
+    response = client.post("/tasks", json=data)
+    assert response.status_code == 200
+    result = response.json()["task"]
+    assert result["name"] == "Test Task"
+    assert result["status"] == 1
+
+    # UUIDの確認
+    assert isinstance(result["id"], str)
+
+    # 正しいUUIDの形式かどうかチェック
+    uuid_pattern = re.compile(
+        r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+    assert uuid_pattern.match(result["id"]) is not None
