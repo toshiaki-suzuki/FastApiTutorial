@@ -1,7 +1,7 @@
 import re
 import uuid
 import pytest
-from deepdiff import DeepDiff
+from collections import defaultdict
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -36,8 +36,33 @@ def test_db():
 def test_read_tasks_200(test_db):
     response = client.get("/tasks")
     assert response.status_code == 200
-    # 順序を無視して比較するために、DeepDiffを使用しています
-    assert DeepDiff(response.json(), {"tasks": tasks})
+
+    # レスポンスの内容を確認
+    results = response.json()["tasks"]
+
+    uuid_pattern = re.compile(
+        r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+
+    def count_pairs(pairs):
+        counts = defaultdict(int)
+        for pair in pairs:
+            counts[pair] += 1
+        return counts
+
+    test_pairs = {(data["name"], data["status"]) for data in tasks}
+    result_pairs = {(result["name"], result["status"]) for result in results}
+
+    test_counts = count_pairs(test_pairs)
+    result_counts = count_pairs(result_pairs)
+
+    for result in results:
+        # UUIDの形式を確認
+        assert uuid_pattern.match(result["id"]) is not None
+        # nameとstatusのペアがテストデータ内に存在するかを確認
+        assert (result["name"], result["status"]) in test_pairs
+
+    # 各ペアの出現回数が一致していることを確認
+    assert test_counts == result_counts
 
 
 def test_read_task_200(test_db):
