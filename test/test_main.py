@@ -21,7 +21,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # pytestのフィクスチャを使用して、テスト前にデータベースを初期化しテストデータを追加します
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def test_db():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
@@ -122,5 +122,25 @@ def test_update_task_404(test_db):
     }
 
     response = client.put(f"/tasks/{non_existent_uuid}", json=data)
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Task not found"}
+
+
+def test_delete_task(test_db):
+    response = client.delete(f"/tasks/{tasks[0]['id']}")
+    assert response.status_code == 200
+    assert response.json() == {"task": tasks[0]}
+    # データベースからタスクが削除されていることを確認
+    db = SessionLocal()
+    db_task = db.query(Task).filter(Task.id == tasks[0]["id"]).first()
+    db.close()
+    assert db_task is None
+
+
+def test_delete_task_404(test_db):
+    # 既知の無効なUUIDを生成
+    non_existent_uuid = uuid.UUID('00000000-0000-0000-0000-000000000000')
+
+    response = client.delete(f"/tasks/{non_existent_uuid}")
     assert response.status_code == 404
     assert response.json() == {"detail": "Task not found"}
