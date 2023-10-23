@@ -72,3 +72,39 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
             "status": task_status
         }
     }
+
+
+@app.put("/tasks/{task_id}")
+def update_task(
+        task_id: uuid.UUID,
+        task: TaskCreate,
+        db: Session = Depends(get_db)):
+    # データベースからタスクを取得します
+    db_task = db.query(Task).filter(Task.id == task_id).first()
+    # データが存在する場合は、更新して返します
+    if db_task:
+        # タスクの名前とステータスを更新します
+        db_task.name = task.name
+        db_task.status = task.status
+        try:
+            # データベースを更新します
+            db.commit()
+            # 更新されたタスクを返します
+            task_id = str(db_task.id)
+            task_name = db_task.name
+            task_status = db_task.status
+        except Exception as e:
+            # データベースの更新に失敗した場合は、ロールバックします
+            db.rollback()
+            raise e
+        finally:
+            # セッションを閉じます
+            db.close()
+        return {
+            "task": {
+                "id": task_id,
+                "name": task_name,
+                "status": task_status
+            }
+        }
+    raise HTTPException(status_code=404, detail="Task not found")
