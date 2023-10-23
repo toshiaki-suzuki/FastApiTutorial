@@ -108,3 +108,31 @@ def update_task(
             }
         }
     raise HTTPException(status_code=404, detail="Task not found")
+
+
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: uuid.UUID, db: Session = Depends(get_db)):
+    # データベースからタスクを取得します
+    db_task = db.query(Task).filter(Task.id == task_id).first()
+    # データが存在する場合は、削除して返します
+    if db_task:
+        try:
+            # データベースからタスクを削除します
+            db.delete(db_task)
+            db.commit()
+        except Exception as e:
+            # データベースの更新に失敗した場合は、ロールバックします
+            db.rollback()
+            raise e
+        finally:
+            # セッションを閉じます
+            db.close()
+        # 削除されたタスクを返します
+        return {
+            "task": {
+                "id": str(db_task.id),
+                "name": db_task.name,
+                "status": db_task.status
+            }
+        }
+    raise HTTPException(status_code=404, detail="Task not found")
