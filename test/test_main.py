@@ -21,7 +21,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # pytestのフィクスチャを使用して、テスト前にデータベースを初期化しテストデータを追加します
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def test_db():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
