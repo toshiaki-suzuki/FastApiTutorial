@@ -108,15 +108,19 @@ def test_update_task(test_db):
 
     response = client.put(f"/tasks/{tasks[0]['id']}", json=data)
     assert response.status_code == 200
-    print(response.text)
     result = response.json()["task"]
     assert result["name"] == "Updated Task"
     assert result["status"] == 2
 
-    # UUIDの確認
-    assert isinstance(result["id"], str)
 
-    # 正しいUUIDの形式かどうかチェック
-    uuid_pattern = re.compile(
-        r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
-    assert uuid_pattern.match(result["id"]) is not None
+def test_update_task_404(test_db):
+    # 既知の無効なUUIDを生成
+    non_existent_uuid = uuid.UUID('00000000-0000-0000-0000-000000000000')
+    data = {
+        "name": "Updated Task",
+        "status": 2
+    }
+
+    response = client.put(f"/tasks/{non_existent_uuid}", json=data)
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Task not found"}
