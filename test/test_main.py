@@ -98,3 +98,25 @@ def test_create_task(test_db):
     uuid_pattern = re.compile(
         r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
     assert uuid_pattern.match(result["id"]) is not None
+
+
+def test_update_task(test_db):
+    data = {
+        "name": "Updated Task",
+        "status": 2
+    }
+
+    response = client.put(f"/tasks/{tasks[0]['id']}", json=data)
+    assert response.status_code == 200
+    print(response.text)
+    result = response.json()["task"]
+    assert result["name"] == "Updated Task"
+    assert result["status"] == 2
+
+    # UUIDの確認
+    assert isinstance(result["id"], str)
+
+    # 正しいUUIDの形式かどうかチェック
+    uuid_pattern = re.compile(
+        r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+    assert uuid_pattern.match(result["id"]) is not None
