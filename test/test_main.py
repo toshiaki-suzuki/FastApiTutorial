@@ -79,6 +79,11 @@ def test_read_task_404(test_db):
     assert response.json() == {"detail": "Task not found"}
 
 
+def test_read_task_422(test_db):
+    response = client.get("/tasks/invalid_value")
+    assert response.status_code == 422
+
+
 def test_create_task(test_db):
     data = {
         "name": "Test Task",
@@ -126,6 +131,16 @@ def test_update_task_404(test_db):
     assert response.json() == {"detail": "Task not found"}
 
 
+def test_update_task_422(test_db):
+    data = {
+        "name": "Updated Task",
+        "status": 2
+    }
+
+    response = client.put("/tasks/invalid_value", json=data)
+    assert response.status_code == 422
+
+
 def test_delete_task(test_db):
     response = client.delete(f"/tasks/{tasks[0]['id']}")
     assert response.status_code == 200
@@ -144,3 +159,8 @@ def test_delete_task_404(test_db):
     response = client.delete(f"/tasks/{non_existent_uuid}")
     assert response.status_code == 404
     assert response.json() == {"detail": "Task not found"}
+
+
+def test_delete_task_422(test_db):
+    response = client.delete("/tasks/invalid_value")
+    assert response.status_code == 422
