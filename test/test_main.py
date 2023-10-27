@@ -108,14 +108,14 @@ def test_create_task(test_db):
 def test_update_task(test_db):
     data = {
         "name": "Updated Task",
-        "status": 2
+        "status": 1
     }
 
     response = client.put(f"/tasks/{tasks[0]['id']}", json=data)
     assert response.status_code == 200
     result = response.json()["task"]
     assert result["name"] == "Updated Task"
-    assert result["status"] == 2
+    assert result["status"] == 1
 
 
 def test_update_task_404(test_db):
@@ -123,7 +123,7 @@ def test_update_task_404(test_db):
     non_existent_uuid = uuid.UUID('00000000-0000-0000-0000-000000000000')
     data = {
         "name": "Updated Task",
-        "status": 2
+        "status": 1
     }
 
     response = client.put(f"/tasks/{non_existent_uuid}", json=data)
