@@ -105,6 +105,30 @@ def test_create_task(test_db):
     assert uuid_pattern.match(result["id"]) is not None
 
 
+def test_create_task_too_short_name_422(test_db):
+    data = {
+        "name": "short",
+        "status": 1
+    }
+
+    response = client.post("/tasks", json=data)
+    assert response.status_code == 422
+    assert response.json()[
+        "detail"][0]["msg"] == "String should have at least 6 characters"
+
+
+def test_create_task_too_long_name_422(test_db):
+    data = {
+        "name": "toooooooooooooooooooooooo_long_name_over_50characters",
+        "status": 1
+    }
+
+    response = client.post("/tasks", json=data)
+    assert response.status_code == 422
+    assert response.json()[
+        "detail"][0]["msg"] == "String should have at most 50 characters"
+
+
 def test_update_task(test_db):
     data = {
         "name": "Updated Task",
@@ -139,6 +163,28 @@ def test_update_task_invalid_path_parameter_422(test_db):
 
     response = client.put("/tasks/invalid_value", json=data)
     assert response.status_code == 422
+
+
+def test_update_task_too_short_name_422(test_db):
+    data = {
+        "name": "short",
+        "status": 1
+    }
+
+    response = client.put(f"/tasks/{tasks[0]['id']}", json=data)
+    assert response.json()[
+        "detail"][0]["msg"] == "String should have at least 6 characters"
+
+
+def test_update_task_too_long_name_422(test_db):
+    data = {
+        "name": "toooooooooooooooooooooooo_long_name_over_50characters",
+        "status": 1
+    }
+
+    response = client.put(f"/tasks/{tasks[0]['id']}", json=data)
+    assert response.json()[
+        "detail"][0]["msg"] == "String should have at most 50 characters"
 
 
 def test_update_task_invalid_status_422(test_db):
