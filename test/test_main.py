@@ -131,7 +131,17 @@ def test_update_task_404(test_db):
     assert response.json() == {"detail": "Task not found"}
 
 
-def test_update_task_422(test_db):
+def test_update_task_invalid_path_parameter_422(test_db):
+    data = {
+        "name": "Updated Task",
+        "status": 1
+    }
+
+    response = client.put("/tasks/invalid_value", json=data)
+    assert response.status_code == 422
+
+
+def test_update_task_invalid_status_422(test_db):
     data = {
         "name": "Updated Task",
         "status": 2
@@ -161,6 +171,6 @@ def test_delete_task_404(test_db):
     assert response.json() == {"detail": "Task not found"}
 
 
-def test_delete_task_422(test_db):
+def test_delete_task_invalid_path_parameter_422(test_db):
     response = client.delete("/tasks/invalid_value")
     assert response.status_code == 422
