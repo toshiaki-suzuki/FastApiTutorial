@@ -1,4 +1,4 @@
-from pydantic import BaseModel as PydanticBaseModel
+from pydantic import BaseModel as PydanticBaseModel, constr, validator
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import declarative_base
 from sqlalchemy_utils import UUIDType
@@ -16,5 +16,11 @@ class Task(Base):
 
 
 class TaskCreate(PydanticBaseModel):
-    name: str
+    name: constr(min_length=6, max_length=50)
     status: int
+
+    @validator("status", pre=True, always=True)
+    def validate_status(cls, value):
+        if value not in [0, 1]:
+            raise ValueError("Status must be either 0 or 1")
+        return value

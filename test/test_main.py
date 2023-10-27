@@ -105,17 +105,41 @@ def test_create_task(test_db):
     assert uuid_pattern.match(result["id"]) is not None
 
 
+def test_create_task_too_short_name_422(test_db):
+    data = {
+        "name": "short",
+        "status": 1
+    }
+
+    response = client.post("/tasks", json=data)
+    assert response.status_code == 422
+    assert response.json()[
+        "detail"][0]["msg"] == "String should have at least 6 characters"
+
+
+def test_create_task_too_long_name_422(test_db):
+    data = {
+        "name": "toooooooooooooooooooooooo_long_name_over_50characters",
+        "status": 1
+    }
+
+    response = client.post("/tasks", json=data)
+    assert response.status_code == 422
+    assert response.json()[
+        "detail"][0]["msg"] == "String should have at most 50 characters"
+
+
 def test_update_task(test_db):
     data = {
         "name": "Updated Task",
-        "status": 2
+        "status": 1
     }
 
     response = client.put(f"/tasks/{tasks[0]['id']}", json=data)
     assert response.status_code == 200
     result = response.json()["task"]
     assert result["name"] == "Updated Task"
-    assert result["status"] == 2
+    assert result["status"] == 1
 
 
 def test_update_task_404(test_db):
@@ -123,7 +147,7 @@ def test_update_task_404(test_db):
     non_existent_uuid = uuid.UUID('00000000-0000-0000-0000-000000000000')
     data = {
         "name": "Updated Task",
-        "status": 2
+        "status": 1
     }
 
     response = client.put(f"/tasks/{non_existent_uuid}", json=data)
@@ -131,7 +155,39 @@ def test_update_task_404(test_db):
     assert response.json() == {"detail": "Task not found"}
 
 
-def test_update_task_422(test_db):
+def test_update_task_invalid_path_parameter_422(test_db):
+    data = {
+        "name": "Updated Task",
+        "status": 1
+    }
+
+    response = client.put("/tasks/invalid_value", json=data)
+    assert response.status_code == 422
+
+
+def test_update_task_too_short_name_422(test_db):
+    data = {
+        "name": "short",
+        "status": 1
+    }
+
+    response = client.put(f"/tasks/{tasks[0]['id']}", json=data)
+    assert response.json()[
+        "detail"][0]["msg"] == "String should have at least 6 characters"
+
+
+def test_update_task_too_long_name_422(test_db):
+    data = {
+        "name": "toooooooooooooooooooooooo_long_name_over_50characters",
+        "status": 1
+    }
+
+    response = client.put(f"/tasks/{tasks[0]['id']}", json=data)
+    assert response.json()[
+        "detail"][0]["msg"] == "String should have at most 50 characters"
+
+
+def test_update_task_invalid_status_422(test_db):
     data = {
         "name": "Updated Task",
         "status": 2
@@ -161,6 +217,6 @@ def test_delete_task_404(test_db):
     assert response.json() == {"detail": "Task not found"}
 
 
-def test_delete_task_422(test_db):
+def test_delete_task_invalid_path_parameter_422(test_db):
     response = client.delete("/tasks/invalid_value")
     assert response.status_code == 422
