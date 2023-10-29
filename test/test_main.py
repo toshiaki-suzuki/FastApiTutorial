@@ -84,7 +84,7 @@ def test_read_task_422(test_db):
     assert response.status_code == 422
 
 
-def test_create_task(test_db):
+def test_create_task_200(test_db):
     data = {
         "name": "Test Task",
         "status": 1
@@ -129,7 +129,7 @@ def test_create_task_too_long_name_422(test_db):
         "detail"][0]["msg"] == "String should have at most 50 characters"
 
 
-def test_update_task(test_db):
+def test_update_task_200(test_db):
     data = {
         "name": "Updated Task",
         "status": 1
@@ -197,7 +197,7 @@ def test_update_task_invalid_status_422(test_db):
     assert response.status_code == 422
 
 
-def test_delete_task(test_db):
+def test_delete_task_200(test_db):
     response = client.delete(f"/tasks/{tasks[0]['id']}")
     assert response.status_code == 200
     assert response.json() == f"Task {tasks[0]['name']} was deleted"
