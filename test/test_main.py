@@ -200,7 +200,7 @@ def test_update_task_invalid_status_422(test_db):
 def test_delete_task(test_db):
     response = client.delete(f"/tasks/{tasks[0]['id']}")
     assert response.status_code == 200
-    assert response.json() == {"task": tasks[0]}
+    assert response.json() == f"Task {tasks[0]['name']} was deleted"
     # データベースからタスクが削除されていることを確認
     db = SessionLocal()
     db_task = db.query(Task).filter(Task.id == tasks[0]["id"]).first()
