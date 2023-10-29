@@ -128,11 +128,6 @@ def delete_task(task_id: uuid.UUID, db: Session = Depends(get_db)):
             # セッションを閉じます
             db.close()
         # 削除されたタスクを返します
-        return {
-            "task": {
-                "id": str(db_task.id),
-                "name": db_task.name,
-                "status": db_task.status
-            }
-        }
+        message = f"Task {db_task.name} was deleted"
+        return message
     raise HTTPException(status_code=404, detail="Task not found")
