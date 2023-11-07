@@ -7,3 +7,9 @@ pipenv shell
 
 docker compose up -d
 ```
+
+## テスト実行
+
+```
+pytest
+```
