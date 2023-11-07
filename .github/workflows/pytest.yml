@@ -24,6 +24,10 @@ jobs:
           --health-retries 10
 
     steps:
+    - name: Set Environment Variables
+      run: |
+        echo "DATABASE_URL="mysql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}"" >> $GITHUB_ENV
+
     - name: Check out repository
       uses: actions/checkout@v2
 
