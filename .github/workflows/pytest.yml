@@ -8,6 +8,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+
     services:
       mysql:
         image: mysql:5.7
@@ -24,10 +31,6 @@ jobs:
           --health-retries 10
 
     steps:
-    - name: Set Environment Variables
-      run: |
-        echo "DATABASE_URL="mysql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}"" >> $GITHUB_ENV
-
     - name: Check out repository
       uses: actions/checkout@v2
 
